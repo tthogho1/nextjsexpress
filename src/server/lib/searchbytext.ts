@@ -1,8 +1,10 @@
 import { Embedding } from './embedding';
 import { Index, RecordMetadata } from '@pinecone-database/pinecone';
-import type { webCamMetadata,Photo } from './type';
+import type { webCamMetadata, Photo } from './type';
 
-const searchByText = async (query: string ,embedding: Embedding, index:Index<RecordMetadata> , image_server: string) => {
+const searchByText = async (query: string ,
+    embedding: Embedding, index:Index<RecordMetadata> , image_server: string): Promise<Photo[]> => {
+        
     const y = await embedding.getTextEmbedding(query);
     const response = await index.namespace('webcamInfo').query({
         topK: 5,
@@ -35,6 +37,6 @@ const searchByText = async (query: string ,embedding: Embedding, index:Index<Rec
         return photo;
     })
     return photos;
-}   
+} 
 
 export default searchByText;

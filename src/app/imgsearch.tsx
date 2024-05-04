@@ -10,10 +10,15 @@ const ImgSearch = (props: { inputState: Dispatch<SetStateAction<Photo[]>> }) => 
   const previewRef = useRef(null);
   const fileInput = useRef<HTMLInputElement>(null)
 
-  dragAndDropFile(dropZoneRef.current , fileInput.current, previewRef.current);
+
+  useEffect(() => {
+    console.log("start useEffect")
+    dragAndDropFile(dropZoneRef.current , fileInput.current, previewRef.current);
+  }, [dropZoneRef.current, fileInput.current, previewRef.current]);
 
   function dragAndDropFile(dropZone: HTMLElement | null, fileInput: HTMLInputElement|null, preview: HTMLElement|null) {
       if (!dropZone || !fileInput || !preview) {
+        console.log("element not found");
         return
       }
       dropZone.addEventListener('dragover', function (e) {
@@ -51,6 +56,7 @@ const ImgSearch = (props: { inputState: Dispatch<SetStateAction<Photo[]>> }) => 
   }
 
   function previewFile(file: File, preview: HTMLElement) {
+      console.log("preview" + file);
       var fr = new FileReader();
       fr.readAsDataURL(file);
       fr.onload = function () {
@@ -62,12 +68,12 @@ const ImgSearch = (props: { inputState: Dispatch<SetStateAction<Photo[]>> }) => 
   }
   const searchImagesByUrl = async () => {
     try {
-      const form = document.getElementById('search-file') as HTMLFormElement;
-      const form_data = new FormData(form);
+     // const form = document.getElementById('search-file') as HTMLFormElement;
+      const form_data = new FormData();
+      form_data.append('file', fileInput.current!.files![0]);
       const response = await fetch('./api/searchWebcamByImage', {
         method: 'POST',
-        headers: { 'Content-Type': 'multipart/form-data' },
-        body: JSON.stringify(form_data),
+        body: form_data,
       });
       const result = await response.json();
       inputState(result);

@@ -1,14 +1,12 @@
 import express, { Request, Response } from "express";
 import { Embedding } from './lib/embedding.js';
 import { Pinecone , QueryResponse, FetchResponse ,RecordMetadata } from '@pinecone-database/pinecone';
-import type { webCamMetadata } from './lib/type.ts';
-import type { Photo } from './lib/type.ts';
 import multer from 'multer';
 import next from "next";
 import dotenv from 'dotenv';
-import searchByText from "./lib/searchbytext";
-import searchByUrl from "./lib/searchbyUrl";
-import searchByImage from "./lib/searchbyImage";
+import searchByText from "./lib/searchbytext.js";
+import searchByUrl from "./lib/searchbyUrl.js";
+import searchByImage from "./lib/searchbyImage.js";
 
 const upload = multer({
     storage: multer.memoryStorage()
@@ -49,7 +47,7 @@ const handle = app.getRequestHandler();
             searchByText(query, embedding, index, image_server).then(result => {
                 res.send(result)
             })
-        }))
+        })) 
 
         server.post('/api/searchWebcamByURL', wrap(async (req:express.Request, res:express.Response, next) => {
             const imageUrl = req.body.imageUrl as string;
@@ -57,7 +55,6 @@ const handle = app.getRequestHandler();
                 res.send(result)
             })
         }))
-
         server.post('/api/searchWebcamByImage', upload.single('file') , wrap(async (req:express.Request, res:express.Response, next) => {
             const image = req.file?.buffer as Buffer;
             const blobImage = new Blob([image], { type: req.file?.mimetype });
