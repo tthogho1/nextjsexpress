@@ -27,13 +27,13 @@ const UrlSearch = (props: { inputState: Dispatch<SetStateAction<Photo[]>> }) => 
     <div className="flex flex-col space-y-10 ml-10" >
       <div className="text-3xl font-bold items-left">Search Image by url</div>
       <div className="h-10 leading-10">
-        <form className="grid grid-cols-6 gap-10" id="search-url">
+        <form className="grid grid-cols-9 gap-2" id="search-url">
           <label className="col-span-1">enter image url</label>.
-          <input className="col-span-3" id="prompt-url" type="text" ref={urlstring} style={{ width: "600px" }} />
+          <input className="col-span-5 float-left" id="prompt-url" type="text" ref={urlstring} style={{ width: "700px" }} />
           <button className="col-span-1" type="button" id="search-btn-url" onClick={() => searchImagesByUrl()}>
             search
           </button>
-          <div className="col-span-1"> </div>
+          <div className="col-span2"> </div>
         </form>
       </div>
     </div>

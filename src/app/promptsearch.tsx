@@ -35,13 +35,13 @@ const PromptSearch = (props: { inputState: Dispatch<SetStateAction<Photo[]>> }) 
     <div className="flex flex-col space-y-10 ml-10" >
       <div className="text-3xl font-bold items-left" >Search Image by Text</div>
       <div className="h-10 leading-10">
-        <form className="grid grid-cols-6 gap-10" id="search-text">
+        <form className="grid grid-cols-7 gap-10" id="search-text">
           <p className="col-span-1" >enter word for search </p>
-          <input className="col-span-1" id="prompt" type="text" ref={prompt} />
+          <input className="col-span-3" id="prompt" type="text" ref={prompt} />
           <button className="col-span-1" type="button" id="search-btn-text" onClick={() => searchImagesByText()}>
             search
           </button>
-          <div className="col-span-2"> </div>
+          <div className="col-span-1"> </div>
         </form>
       </div>
     </div>
