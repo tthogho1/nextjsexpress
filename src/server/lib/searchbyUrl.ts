@@ -2,14 +2,15 @@ import { Embedding } from './embedding';
 import { Index, RecordMetadata } from '@pinecone-database/pinecone';
 import type { webCamMetadata,Photo } from './type';
 
-const searchByUrl = async (imageUrl: string ,embedding: Embedding, index:Index<RecordMetadata> , image_server: string) => {
-    console.log("imageUrl: " + imageUrl);
+const searchByUrl = async (query : {imageUrl: string, count: string} ,embedding: Embedding, index:Index<RecordMetadata> , image_server: string) => {
+    console.log("imageUrl: " + query.imageUrl);
+    console.log("count: " + query.count);
 
-    const y = await embedding.getImageEmbedding(imageUrl);
+    const y = await embedding.getImageEmbedding(query.imageUrl);
     const response = await index.namespace('webcamInfo').query({
-        topK: 5,
+        topK: parseInt(query.count) ,
         vector: y,
-        includeValues: false,
+        includeValues: false,   
         includeMetadata: true
     });
     

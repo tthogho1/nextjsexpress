@@ -2,12 +2,12 @@ import { Embedding } from './embedding';
 import { Index, RecordMetadata } from '@pinecone-database/pinecone';
 import type { webCamMetadata, Photo } from './type';
 
-const searchByText = async (query: string ,
+const searchByText = async (query: {query:string,count:string}, 
     embedding: Embedding, index:Index<RecordMetadata> , image_server: string): Promise<Photo[]> => {
         
-    const y = await embedding.getTextEmbedding(query);
+    const y = await embedding.getTextEmbedding(query.query);
     const response = await index.namespace('webcamInfo').query({
-        topK: 5,
+        topK: parseInt(query.count),
         vector: y,
         includeValues: false,
         includeMetadata: true

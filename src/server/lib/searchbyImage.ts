@@ -2,10 +2,10 @@ import { Embedding } from './embedding';
 import { Index, RecordMetadata } from '@pinecone-database/pinecone';
 import type { webCamMetadata,Photo } from './type';
 
-const searchByImage = async (blobImage: Blob ,embedding: Embedding, index:Index<RecordMetadata> , image_server: string) => {
+const searchByImage = async (blobImage: Blob , count: string, embedding: Embedding, index:Index<RecordMetadata> , image_server: string) => {
     const y = await embedding.getBlobImgEmbedding(blobImage);
     const response = await index.namespace('webcamInfo').query({
-        topK: 5,
+        topK: parseInt(count) ,
         vector: y,
         includeValues: false,
         includeMetadata: true
