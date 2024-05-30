@@ -43,27 +43,35 @@ const handle = app.getRequestHandler();
 
         const embedding = new Embedding() 
         server.post('/api/searchWebcam', wrap(async (req:express.Request, res:express.Response, next) => {
-            const query = req.body.query as string;
+            //const query = req.body.query as string;
+            //const count = req.body.count as string;
+            const query  ={
+                query: req.body.query as string,
+                count: req.body.count as string
+            }
+
             searchByText(query, embedding, index, image_server).then(result => {
                 res.send(result)
             })
         })) 
 
         server.post('/api/searchWebcamByURL', wrap(async (req:express.Request, res:express.Response, next) => {
-            const imageUrl = req.body.imageUrl as string;
-            searchByUrl(imageUrl, embedding, index, image_server).then(result => {
+            const query = { imageUrl: req.body.imageUrl ,
+                count: req.body.count };
+            searchByUrl(query, embedding, index, image_server).then(result => {
                 res.send(result)
             })
         }))
         server.post('/api/searchWebcamByImage', upload.single('file') , wrap(async (req:express.Request, res:express.Response, next) => {
             const image = req.file?.buffer as Buffer;
+            const count = req.body.count as string;
             const blobImage = new Blob([image], { type: req.file?.mimetype });
             if (!image) {
                 res.status(400).send('No image uploaded');
                 return;
             }
 
-            searchByImage(blobImage, embedding, index, image_server).then(result => {
+            searchByImage(blobImage, count ,embedding, index, image_server).then(result => {
                 res.send(result)
             })
         }))

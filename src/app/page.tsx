@@ -10,15 +10,26 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 export default function Home() {
+  const [count, setCount ]= useState('');
   const [photos, setInputState] = useState<Photo[]>([]);
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    // input only allows numbers
+    const re = /^[0-9\b]+$/;
+    if (event.target.value === '' || re.test(event.target.value)) {
+      setCount(event.target.value);
+    }
+  }
 
   return ( 
     <main className="flex flex-col space-y-10 ml-10" >
       <div></div>
-      <div></div>
-      <PromptSearch inputState={setInputState}></PromptSearch>
-      <ImgSearch inputState={setInputState}></ImgSearch>
-      <UrlSearch inputState={setInputState}></UrlSearch>
+      <div className="font-bold">Number of data acquired : 
+          <input className="text-right" type="text" style={{ width: "80px" }}
+            value={count} onChange={handleInputChange}/></div>
+      <PromptSearch inputState={setInputState} count={count}></PromptSearch>
+      <ImgSearch inputState={setInputState} count={count}></ImgSearch>
+      <UrlSearch inputState={setInputState} count={count}></UrlSearch>
 
       <div className="grid grid-cols-4 gap-2">
         {photos.map((item, index) => (

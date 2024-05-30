@@ -3,8 +3,8 @@
 import React, { Dispatch, SetStateAction, useRef, useEffect } from "react";
 import type { Photo } from '../type/type';
 
-const ImgSearch = (props: { inputState: Dispatch<SetStateAction<Photo[]>> }) => {
-  const { inputState } = props;
+const ImgSearch = (props: { inputState: Dispatch<SetStateAction<Photo[]>>, count: string }) => {
+  const { inputState, count } = props;
 
   const dropZoneRef = useRef(null);
   const previewRef = useRef(null);
@@ -71,6 +71,7 @@ const ImgSearch = (props: { inputState: Dispatch<SetStateAction<Photo[]>> }) => 
      // const form = document.getElementById('search-file') as HTMLFormElement;
       const form_data = new FormData();
       form_data.append('file', fileInput.current!.files![0]);
+      form_data.append('count', count);
       const response = await fetch('./api/searchWebcamByImage', {
         method: 'POST',
         body: form_data,
@@ -86,17 +87,16 @@ const ImgSearch = (props: { inputState: Dispatch<SetStateAction<Photo[]>> }) => 
   return (
     <div className="flex flex-col space-y-10 ml-10" >
       <div className="text-3xl font-bold items-left">Search Image by file</div>
-      <div className="h-10 leading-10" style={{ height: "300px" }}>
+      <div className="h-10 leading-10" style={{ height: "150px" }}>
         <form className="grid grid-cols-6 gap-10" id="search-file" method="POST" encType="multipart/form-data">
-          <div className="col-span-3" ref={dropZoneRef} id="drop-zone" style={{ textAlign: "center", height: "250px", border: "1px solid" }}>
-            <p> drag and drop image file </p>
-            <div className="left-column" ref={previewRef} id="preview"></div>
+          <div className="col-span-2 items-center" ref={dropZoneRef} id="drop-zone" style={{ textAlign: "center", height: "130px", border: "1px solid" }}>
+            <div className="flex left-column items-center justify-center" ref={previewRef} id="preview">drag and drop </div>
             <input type="file" name="file" id="file-input" ref={fileInput} style={{ display: "none" }} />
           </div>
           <button className="col-span-1" type="button" id="search-btn-image" onClick={() => searchImagesByUrl()}>
             search
           </button>
-          <div className="col-span-2"> </div>
+          <div className="col-span-3"> </div>
         </form>
       </div>
     </div>
