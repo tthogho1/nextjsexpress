@@ -8,7 +8,7 @@
     "dev": "tsc -p tsconfig.server.json && cross-env NODE_ENV=development ts-node --esm src/server/index.ts",
     "test2": "tsc -p tsconfig.server.json",
     "build": "next build",
-    "start": "next start",
+    "start": "node --loader ts-node/esm src/server/index.ts",
     "lint": "next lint"
   },
   "dependencies": {
