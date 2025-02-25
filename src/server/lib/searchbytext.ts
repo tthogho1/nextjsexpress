@@ -4,7 +4,8 @@ import type { webCamMetadata, Photo } from './type';
 
 const searchByText = async (query: {query:string,count:string}, 
     embedding: Embedding, index:Index<RecordMetadata> , image_server: string): Promise<Photo[]> => {
-        
+    console.log("query: " + query.query);
+    console.log("count: " + query.count);    
     const y = await embedding.getTextEmbedding(query.query);
     const response = await index.namespace('webcamInfo').query({
         topK: parseInt(query.count),
@@ -12,6 +13,8 @@ const searchByText = async (query: {query:string,count:string},
         includeValues: false,
         includeMetadata: true
     }) ;
+
+    console.log(response);
     const { matches } = response;
     const photos = matches.map( match  => {
         const metadata = match.metadata as webCamMetadata;

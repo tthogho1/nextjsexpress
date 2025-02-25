@@ -5,6 +5,7 @@ import multer from 'multer';
 import next from "next";
 import dotenv from 'dotenv';
 import searchByText from "./lib/searchbytext.js";
+import searchbytextfromatlas from "./lib/searchbytextfromatlas.js";
 import searchByUrl from "./lib/searchbyUrl.js";
 import searchByImage from "./lib/searchbyImage.js";
 
@@ -51,6 +52,19 @@ const handle = app.getRequestHandler();
             }
 
             searchByText(query, embedding, index, image_server).then(result => {
+                res.send(result)
+            })
+        })) 
+
+        server.post('/api/searchWebcamFromAtlas', wrap(async (req:express.Request, res:express.Response, next) => {
+            //const query = req.body.query as string;
+            //const count = req.body.count as string;
+            const query  ={
+                query: req.body.query as string,
+                count: req.body.count as string
+            }
+
+            searchbytextfromatlas(query, embedding, image_server).then(result => {
                 res.send(result)
             })
         })) 
