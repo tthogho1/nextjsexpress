@@ -2,6 +2,7 @@
 
 import React ,{useState, useRef} from "react";
 import PromptSearch  from "./promptsearch";
+import PromptSearchAtlas from "./promptsearchAtlas";
 import UrlSearch from "./urlsearch";
 import ImgSearch from "./imgsearch";
 import type { Photo } from '../type/type';
@@ -27,7 +28,7 @@ export default function Home() {
       <div className="font-bold">Number of data acquired : 
           <input className="text-right" type="text" style={{ width: "80px" }}
             value={count} onChange={handleInputChange}/></div>
-      <PromptSearch inputState={setInputState} count={count}></PromptSearch>
+      <PromptSearchAtlas inputState={setInputState} count={count}></PromptSearchAtlas> 
       <ImgSearch inputState={setInputState} count={count}></ImgSearch>
       <UrlSearch inputState={setInputState} count={count}></UrlSearch>
 

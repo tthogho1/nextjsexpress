@@ -76,6 +76,7 @@ const handle = app.getRequestHandler();
                 res.send(result)
             })
         }))
+        
         server.post('/api/searchWebcamByImage', upload.single('file') , wrap(async (req:express.Request, res:express.Response, next) => {
             const image = req.file?.buffer as Buffer;
             const count = req.body.count as string;

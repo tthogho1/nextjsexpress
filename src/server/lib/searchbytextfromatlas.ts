@@ -2,7 +2,6 @@ import { MongoClient, UpdateResult } from 'mongodb';
 import { Embedding } from './embedding';
 import type { webCamMetadata, Photo } from './type';
 
-
 const uri = process.env.MONGODB_URI;  
 if (!uri) {
     throw new Error('MONGODB_URI missing in .env');  
