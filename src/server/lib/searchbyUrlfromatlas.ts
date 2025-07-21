@@ -16,24 +16,24 @@ const searchByUrlfromatlas = async (
 
   const photos = result.map(match => {
     try {
-      const metadata = match.metadata as webCamMetadata;
+      //console.log('match: ', match);
       const photo: Photo = {
-        id: match.id,
+        id: match.webcam.webcamid,
         score: match.score,
         created_at: '',
         width: 200,
         height: 112,
-        description: metadata.title,
+        description: match.webcam.title,
         urls: {
-          small: image_server + match.id + '.jpg',
+          small: image_server + match.webcam.webcamid + '.jpg',
         },
         links: {
-          html: metadata.day,
+          html: match.webcam.player.day,
         },
         location: {
-          country: metadata.country,
-          latitude: metadata.latitude,
-          longitude: metadata.longitude,
+          country: match.webcam.location.country,
+          latitude: match.webcam.location.latitude,
+          longitude: match.webcam.location.longitude,
         },
       };
       return photo;
