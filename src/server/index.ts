@@ -118,7 +118,7 @@ const handle = app.getRequestHandler();
     server.all('*', (req: Request, res: Response) => {
       return handle(req, res);
     });
-    server.listen(port, () => {
+    server.listen(port, '0.0.0.0', () => {
       console.log(`${port} start`);
     });
   } catch (e) {
