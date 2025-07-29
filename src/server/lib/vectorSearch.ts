@@ -1,6 +1,5 @@
 import connectToDatabase from './dbConnect.js';
 import type { Photo } from './type';
-import { ObjectId } from 'mongodb';
 
 interface Match {
   id: string;
@@ -96,16 +95,16 @@ const getDataById = async (id: string) => {
     const database = await connectToDatabase();
     const collection = database.collection('webcam');
 
-    // 指定されたIDでドキュメントを検索（ObjectIdに変換）
-    const result = await collection.findOne({ _id: new ObjectId(id) });
+    // 指定されたwebcamidでドキュメントを検索
+    const result = await collection.findOne({ 'webcam.webcamid': id });
 
     if (!result) {
-      throw new Error(`Document with ID ${id} not found`);
+      throw new Error(`Document with webcamid ${id} not found`);
     }
 
     return result;
   } catch (error) {
-    console.error('Error getting data by ID:', error);
+    console.error('Error getting data by webcamid:', error);
     throw error;
   }
 };
