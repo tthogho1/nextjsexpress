@@ -1,5 +1,6 @@
 import connectToDatabase from './dbConnect.js';
 import type { Photo } from './type';
+import { Pinecone } from '@pinecone-database/pinecone';
 
 interface Match {
   id: string;
@@ -95,8 +96,9 @@ const getDataById = async (id: string) => {
     const database = await connectToDatabase();
     const collection = database.collection('webcam');
 
+    const idInt = parseInt(id, 10);
     // 指定されたwebcamidでドキュメントを検索
-    const result = await collection.findOne({ 'webcam.webcamid': id });
+    const result = await collection.findOne({ 'webcam.webcamid': idInt });
 
     if (!result) {
       throw new Error(`Document with webcamid ${id} not found`);
@@ -109,4 +111,88 @@ const getDataById = async (id: string) => {
   }
 };
 
-export { vectorSearch, convertToPhoto, getDataById };
+// PineconeからIDでデータを取得する関数
+const getDataByIdFromPinecone = async (id: string) => {
+  try {
+    const pc = new Pinecone({
+      apiKey: process.env.PINECONE_API_KEY!,
+    });
+
+    const index = pc.index(process.env.PINECONE_INDEX_NAME!);
+
+    // PineconeからIDでベクターデータを取得（webcamInfoネームスペース）
+    const fetchResult = await index.namespace('webcamInfo').fetch([id]);
+
+    if (!fetchResult.records || !fetchResult.records[id]) {
+      throw new Error(`Data with ID ${id} not found in Pinecone namespace 'webcamInfo'`);
+    }
+
+    const record = fetchResult.records[id];
+
+    return {
+      id: record.id,
+      values: record.values,
+      metadata: record.metadata,
+    };
+  } catch (error) {
+    console.error('Error fetching data from Pinecone:', error);
+    throw new Error(
+      `Failed to fetch data from Pinecone: ${
+        error instanceof Error ? error.message : String(error)
+      }`
+    );
+  }
+};
+
+// Pineconeのインデックス統計を取得する関数
+const getPineconeStats = async () => {
+  try {
+    const pc = new Pinecone({
+      apiKey: process.env.PINECONE_API_KEY!,
+    });
+
+    const index = pc.index(process.env.PINECONE_INDEX_NAME!);
+
+    // インデックスの統計情報を取得（webcamInfoネームスペース）
+    const stats = await index.namespace('webcamInfo').describeIndexStats();
+
+    return stats;
+  } catch (error) {
+    console.error('Error getting Pinecone stats:', error);
+    throw error;
+  }
+};
+
+// Pineconeからサンプルデータを検索する関数（テスト用）
+const searchSampleFromPinecone = async (limit: number = 5) => {
+  try {
+    const pc = new Pinecone({
+      apiKey: process.env.PINECONE_API_KEY!,
+    });
+
+    const index = pc.index(process.env.PINECONE_INDEX_NAME!);
+
+    // ダミーのベクターでクエリして存在するIDを取得（webcamInfoネームスペース）
+    const dummyVector = new Array(512).fill(0); // 512次元のダミーベクター
+
+    const queryResult = await index.namespace('webcamInfo').query({
+      vector: dummyVector,
+      topK: limit,
+      includeMetadata: true,
+    });
+
+    return queryResult.matches || [];
+  } catch (error) {
+    console.error('Error searching sample from Pinecone:', error);
+    throw error;
+  }
+};
+
+export {
+  vectorSearch,
+  convertToPhoto,
+  getDataById,
+  getDataByIdFromPinecone,
+  getPineconeStats,
+  searchSampleFromPinecone,
+};
